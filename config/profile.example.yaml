@@ -1,0 +1,72 @@
+# ============================================================
+#  JobAgent - Your Professional Profile
+#  Copy to profile.yaml and fill with your real details.
+#  This is what Claude uses to tailor your CV and answers.
+# ============================================================
+
+personal:
+  name: "Your Full Name"
+  email: "you@email.com"
+  phone: "+91-XXXXXXXXXX"
+  location: "Bengaluru, India"
+  linkedin: "https://linkedin.com/in/yourprofile"
+  github: ""
+  website: ""
+  summary: |
+    Experienced Product Manager with 8+ years building AI-powered products at scale.
+    Proven track record of 0→1 launches, cross-functional leadership, and data-driven
+    decision making. Passionate about applied AI/ML and consumer-facing products.
+
+experience:
+  - company: "TechCorp"
+    role: "Senior Product Manager"
+    start: "Jan 2021"
+    end: "Present"
+    location: "Bengaluru"
+    bullets:
+      - "Led 0→1 launch of AI recommendation engine, driving 34% increase in engagement"
+      - "Managed cross-functional team of 12 engineers, 3 designers across 2 time zones"
+      - "Defined and shipped 6 major releases with 99.9% uptime SLA"
+    tech: ["Python", "SQL", "Figma", "JIRA", "Mixpanel"]
+
+  - company: "StartupXYZ"
+    role: "Product Manager"
+    start: "Jun 2018"
+    end: "Dec 2020"
+    location: "Mumbai"
+    bullets:
+      - "Grew B2B SaaS from 0 to 200 enterprise customers in 18 months"
+      - "Reduced churn by 28% through data-driven feature prioritization"
+    tech: ["Amplitude", "Intercom", "Salesforce"]
+
+education:
+  - institution: "IIT Bombay"
+    degree: "B.Tech Computer Science"
+    year: "2018"
+
+  - institution: "ISB Hyderabad"
+    degree: "Executive MBA"
+    year: "2022"
+
+skills:
+  product: ["Product Strategy", "Roadmapping", "A/B Testing", "OKRs", "PRDs", "User Research"]
+  technical: ["SQL", "Python", "APIs", "LLMs", "Prompt Engineering", "Analytics"]
+  tools: ["JIRA", "Notion", "Figma", "Mixpanel", "Amplitude", "Looker"]
+  soft: ["Stakeholder Management", "Cross-functional Leadership", "Executive Communication"]
+
+certifications:
+  - "AWS Certified Cloud Practitioner (2023)"
+  - "Google Analytics Certified"
+
+achievements:
+  - "Led product generating ₹50Cr ARR"
+  - "Speaker at ProductCon 2023"
+
+preferences:
+  avoid_companies: []
+  preferred_industries: ["AI/ML", "SaaS", "FinTech", "HealthTech"]
+  min_salary_inr: 4000000       # 40 LPA
+  willing_to_relocate: true
+  notice_period: "60 days"
+
+cover_letter_tone: "confident and specific"

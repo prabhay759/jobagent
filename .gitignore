@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+coverage.xml
+*.egg
+
+# Config with secrets (use examples instead)
+config/config.yaml
+config/profile.yaml
+config/linkedin_cookies.json
+.env
+
+# Data & outputs (local only)
+data/
+output/
+logs/
+
+# Dashboard build
+dashboard/node_modules/
+dashboard/dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db

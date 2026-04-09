@@ -1,0 +1,74 @@
+# ============================================================
+#  JobAgent - Configuration
+#  Copy to config.yaml and fill in your details.
+#  Secrets can also be set via environment variables:
+#    ANTHROPIC_API_KEY, TWILIO_ACCOUNT_SID, etc.
+# ============================================================
+
+anthropic:
+  api_key: "sk-ant-..."
+  model: "claude-sonnet-4-20250514"
+  max_tokens: 4096
+  max_retries: 3
+
+linkedin:
+  email: "you@email.com"
+  password: "yourpassword"
+  use_cookies: true                        # Recommended (avoids bot detection)
+  cookies_file: "config/linkedin_cookies.json"
+  headless: true                           # false = see the browser
+  slow_mo_ms: 50                           # ms delay between actions
+
+search:
+  keywords:
+    - "Product Manager AI"
+    - "Head of Product"
+    - "Director of Product"
+  locations:
+    - "India"
+    - "Remote"
+  experience_levels:
+    - "Mid-Senior level"
+    - "Director"
+  job_types:
+    - "Full-time"
+  date_posted: "past_week"                 # past_24h | past_week | past_month | any
+  easy_apply_only: false
+  max_jobs_per_scan: 50
+  min_match_score: 75                      # 0-100 — skip anything below this
+
+application:
+  auto_apply: true                         # false = collect only, never submit
+  require_whatsapp_approval: true          # strongly recommended
+  cover_letter: true
+  apply_delay_seconds: 30                  # delay between applications
+  max_applications_per_day: 10            # hard cap
+
+whatsapp:
+  provider: "mock"                         # mock | twilio | callmebot
+  approval_timeout_minutes: 60
+  webhook_port: 8081
+
+  twilio:
+    account_sid: "ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    auth_token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    from_number: "whatsapp:+14155238886"   # Twilio Sandbox number
+    to_number: "whatsapp:+91XXXXXXXXXX"   # Your WhatsApp number
+
+  # callmebot:
+  #   phone: "+91XXXXXXXXXX"
+  #   apikey: "XXXXXX"
+
+cv:
+  base_template: "config/cv_template.html"   # Optional custom template
+  output_dir: "output/cvs"
+
+dashboard:
+  host: "127.0.0.1"
+  port: 8080
+  auto_open_browser: true
+  cors_origins:
+    - "http://localhost:5173"
+
+database:
+  path: "data/jobs.db"
