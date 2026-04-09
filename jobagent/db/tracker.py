@@ -11,7 +11,7 @@ import sqlite3
 import threading
 from collections.abc import Generator
 from contextlib import contextmanager
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 from jobagent.logging_config import get_logger
@@ -117,7 +117,7 @@ class JobTracker:
             return False
 
         job_id = job.get("id") or self._make_id(job)
-        now = datetime.now(datetime.UTC).isoformat()
+        now = datetime.now(UTC).isoformat()
 
         with self._get_conn() as conn:
             try:
@@ -150,7 +150,7 @@ class JobTracker:
     def update_job(self, job_id: str, **fields) -> None:
         if not fields:
             return
-        fields["updated_at"] = datetime.now(datetime.UTC).isoformat()
+        fields["updated_at"] = datetime.now(UTC).isoformat()
         set_clause = ", ".join(f"{k} = ?" for k in fields)
         with self._get_conn() as conn:
             conn.execute(
@@ -261,7 +261,7 @@ class JobTracker:
                 """UPDATE scan_runs
                    SET finished_at=?, jobs_found=?, jobs_new=?, status='done'
                    WHERE id=?""",
-                (datetime.now(datetime.UTC).isoformat(), found, new, scan_id),
+                (datetime.now(UTC).isoformat(), found, new, scan_id),
             )
             conn.commit()
 
