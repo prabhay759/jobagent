@@ -13,7 +13,9 @@ def write_config(tmp_path: Path, data: dict) -> Path:
 
 
 class TestSettings:
-    def test_load_minimal_valid_config(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_load_minimal_valid_config(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         from jobagent.settings import load_settings
 
         # Clear env-var override that CI sets (ANTHROPIC_API_KEY=sk-ant-test-dummy)
@@ -23,7 +25,9 @@ class TestSettings:
         settings = load_settings(cfg_path)
         assert settings.anthropic.api_key.get_secret_value() == "sk-ant-test"
 
-    def test_env_var_overrides_api_key(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_env_var_overrides_api_key(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         from jobagent.settings import load_settings
 
         cfg_path = write_config(tmp_path, {"anthropic": {"api_key": "sk-ant-original"}})
@@ -48,8 +52,9 @@ class TestSettings:
         assert settings.whatsapp.provider == "mock"
 
     def test_score_threshold_validation(self) -> None:
-        from jobagent.settings import SearchSettings
         from pydantic import ValidationError
+
+        from jobagent.settings import SearchSettings
 
         with pytest.raises(ValidationError):
             SearchSettings(min_match_score=150)
