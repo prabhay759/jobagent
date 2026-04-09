@@ -61,6 +61,7 @@ class ApplicationSettings(BaseSettings):
     model_config = SettingsConfigDict(extra="ignore")
 
     auto_apply: bool = True
+    preview_before_send: bool = True   # Show CV+CL for approval before submitting
     require_whatsapp_approval: bool = True
     cover_letter: bool = True
     apply_delay_seconds: int = Field(30, ge=5)

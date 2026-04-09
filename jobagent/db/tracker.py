@@ -288,3 +288,22 @@ class JobTracker:
         if hasattr(self._local, "conn") and self._local.conn:
             self._local.conn.close()
             self._local.conn = None
+
+    # ── Cover Letter / CV Edit Helpers ─────────────────────────
+
+    def get_cover_letter(self, job_id: str) -> str:
+        with self._get_conn() as conn:
+            row = conn.execute(
+                "SELECT cover_letter FROM jobs WHERE id = ?", (job_id,)
+            ).fetchone()
+            return row["cover_letter"] or "" if row else ""
+
+    def save_cover_letter(self, job_id: str, text: str) -> None:
+        self.update_job(job_id, cover_letter=text)
+
+    def get_cv_path(self, job_id: str) -> Optional[str]:
+        with self._get_conn() as conn:
+            row = conn.execute(
+                "SELECT cv_path FROM jobs WHERE id = ?", (job_id,)
+            ).fetchone()
+            return row["cv_path"] if row else None

@@ -41,6 +41,7 @@ application:
   auto_apply: true                         # false = collect only, never submit
   require_whatsapp_approval: true          # strongly recommended
   cover_letter: true
+  preview_before_send: true                # Send CV+CL to WhatsApp for your approval before submitting
   apply_delay_seconds: 30                  # delay between applications
   max_applications_per_day: 10            # hard cap
 
