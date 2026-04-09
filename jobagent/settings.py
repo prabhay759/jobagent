@@ -116,13 +116,13 @@ class Settings(BaseSettings):
     )
 
     anthropic: AnthropicSettings
-    linkedin: LinkedInSettings = Field(default_factory=LinkedInSettings)
-    search: SearchSettings = Field(default_factory=SearchSettings)
-    application: ApplicationSettings = Field(default_factory=ApplicationSettings)
-    whatsapp: WhatsAppSettings = Field(default_factory=WhatsAppSettings)
-    cv: CVSettings = Field(default_factory=CVSettings)
-    dashboard: DashboardSettings = Field(default_factory=DashboardSettings)
-    database: DatabaseSettings = Field(default_factory=DatabaseSettings)
+    linkedin: LinkedInSettings = Field(default_factory=lambda: LinkedInSettings())  # type: ignore[call-arg]
+    search: SearchSettings = Field(default_factory=lambda: SearchSettings())  # type: ignore[call-arg]
+    application: ApplicationSettings = Field(default_factory=lambda: ApplicationSettings())  # type: ignore[call-arg]
+    whatsapp: WhatsAppSettings = Field(default_factory=lambda: WhatsAppSettings())  # type: ignore[call-arg]
+    cv: CVSettings = Field(default_factory=lambda: CVSettings())  # type: ignore[call-arg]
+    dashboard: DashboardSettings = Field(default_factory=lambda: DashboardSettings())  # type: ignore[call-arg]
+    database: DatabaseSettings = Field(default_factory=lambda: DatabaseSettings())  # type: ignore[call-arg]
 
 
 def load_settings(config_path: str | Path = "config/config.yaml") -> Settings:

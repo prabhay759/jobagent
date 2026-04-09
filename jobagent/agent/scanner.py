@@ -10,7 +10,7 @@ import hashlib
 import json
 import random
 import re
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from pathlib import Path
 from urllib.parse import urlencode
 
@@ -66,7 +66,7 @@ class LinkedInScanner:
 
     async def scan(
         self,
-        on_job_found: Callable[[dict], None] | None = None,
+        on_job_found: Callable[[dict], Awaitable[None] | None] | None = None,
     ) -> list[dict]:
         """
         Run a full scan across all configured keywords × locations.
@@ -101,9 +101,10 @@ class LinkedInScanner:
                     for job in jobs:
                         all_jobs.append(job)
                         if on_job_found:
-                            await asyncio.coroutine(on_job_found)(job) \
-                                if asyncio.iscoroutinefunction(on_job_found) \
-                                else on_job_found(job)
+                            if asyncio.iscoroutinefunction(on_job_found):
+                                await on_job_found(job)
+                            else:
+                                on_job_found(job)
 
                     await self._human_pause(3, 7)
 

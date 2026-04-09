@@ -197,7 +197,7 @@ class JobTracker:
                 rows = conn.execute(
                     "SELECT * FROM jobs ORDER BY found_at DESC LIMIT ?", (limit,)
                 ).fetchall()
-            return [self._parse_row(r) for r in rows]
+            return [j for r in rows if (j := self._parse_row(r)) is not None]
 
     def list_pending_approval(self) -> list[dict]:
         with self._get_conn() as conn:
@@ -206,7 +206,7 @@ class JobTracker:
                    WHERE status = 'pending_approval' AND whatsapp_approved IS NULL
                    ORDER BY found_at DESC"""
             ).fetchall()
-            return [self._parse_row(r) for r in rows]
+            return [j for r in rows if (j := self._parse_row(r)) is not None]
 
     def get_stats(self) -> dict:
         statuses = [
@@ -273,7 +273,7 @@ class JobTracker:
         return hashlib.sha1(key.encode()).hexdigest()[:12]
 
     @staticmethod
-    def _parse_row(row: sqlite3.Row | None) -> dict | None:
+    def _parse_row(row: sqlite3.Row | None) -> dict | None:  # noqa: UP007
         if row is None:
             return None
         d = dict(row)
