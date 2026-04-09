@@ -49,7 +49,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check if dashboard exists
+        id: check
+        run: |
+          if [ -f "dashboard/package.json" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "⚠️  No dashboard/package.json found — skipping build"
+          fi
+
       - name: Setup Node.js
+        if: steps.check.outputs.exists == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -57,6 +68,7 @@ jobs:
           cache-dependency-path: dashboard/package-lock.json
 
       - name: Install & Build
+        if: steps.check.outputs.exists == 'true'
         run: |
           cd dashboard
           npm ci

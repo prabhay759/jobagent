@@ -1,0 +1,17 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #050c12;
+  color: #c8d6e5;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: #080e14; }
+::-webkit-scrollbar-thumb { background: #1e2d3d; border-radius: 2px; }
+
+input, textarea, select, button { font-family: inherit; }
+input::placeholder, textarea::placeholder { color: #2a3d50; }
+a { color: inherit; text-decoration: none; }

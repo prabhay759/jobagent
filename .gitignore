@@ -26,6 +26,7 @@ logs/
 
 # Dashboard build
 dashboard/node_modules/
+# package-lock.json is committed intentionally for CI
 dashboard/dist/
 
 # IDE
