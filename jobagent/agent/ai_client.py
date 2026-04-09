@@ -8,11 +8,11 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass, field
-from typing import Any, Optional
+from dataclasses import dataclass
+from typing import Any
 
 import anthropic
-from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
 
 from jobagent.logging_config import get_logger
 
@@ -66,8 +66,8 @@ class AIClient:
         self,
         prompt: str,
         *,
-        system: Optional[str] = None,
-        messages: Optional[list[dict]] = None,
+        system: str | None = None,
+        messages: list[dict] | None = None,
         max_tokens: int = 1024,
     ) -> str:
         if messages is None:
@@ -106,7 +106,8 @@ class AIClient:
                 red_flags, company_stage, role_level
         """
         logger.info("Analyzing job fit…")
-        result = self._call_json(f"""You are an expert career coach. Analyze this job for the candidate.
+        result = self._call_json(
+            f"""You are an expert career coach. Analyze this job for the candidate.
 
 JOB DESCRIPTION:
 {job_description[:4000]}

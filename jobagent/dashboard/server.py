@@ -5,11 +5,9 @@ FastAPI serving REST API + static file serving for CV PDFs.
 
 from __future__ import annotations
 
-import asyncio
 import webbrowser
 from pathlib import Path
 from threading import Thread
-from typing import Optional
 
 import uvicorn
 import yaml
@@ -48,7 +46,7 @@ def create_app(settings: Settings, profile: dict) -> FastAPI:
         return tracker.get_stats()
 
     @app.get("/api/jobs")
-    def list_jobs(status: Optional[str] = None, limit: int = 200):
+    def list_jobs(status: str | None = None, limit: int = 200):
         return tracker.list_jobs(status=status, limit=limit)
 
     @app.get("/api/jobs/{job_id}")
@@ -104,7 +102,7 @@ def create_app(settings: Settings, profile: dict) -> FastAPI:
             new_cl = await pipeline.regenerate_cover_letter(job_id, body.instructions)
             return {"cover_letter": new_cl}
         except Exception as exc:
-            raise HTTPException(500, str(exc))
+            raise HTTPException(500, str(exc)) from exc
 
     @app.post("/api/jobs/{job_id}/cv/regenerate")
     async def regenerate_cv(job_id: str):
@@ -115,7 +113,7 @@ def create_app(settings: Settings, profile: dict) -> FastAPI:
             path = await pipeline.regenerate_cv(job_id)
             return {"cv_path": str(path)}
         except Exception as exc:
-            raise HTTPException(500, str(exc))
+            raise HTTPException(500, str(exc)) from exc
 
     # ── Submit after Edit ──────────────────────────────────────
 
@@ -157,7 +155,7 @@ def create_app(settings: Settings, profile: dict) -> FastAPI:
         try:
             return {"response": pipeline.chat(job_id, body.message)}
         except Exception as exc:
-            raise HTTPException(500, str(exc))
+            raise HTTPException(500, str(exc)) from exc
 
     @app.get("/api/jobs/{job_id}/chat/history")
     def chat_history(job_id: str):
@@ -213,7 +211,8 @@ def run_server(config_path: str = "config/config.yaml",
 
     if open_browser and settings.dashboard.auto_open_browser:
         def _open():
-            import time; time.sleep(1.5)
+            import time
+            time.sleep(1.5)
             webbrowser.open(f"http://{host}:{port}")
         Thread(target=_open, daemon=True).start()
 

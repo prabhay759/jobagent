@@ -1,13 +1,11 @@
 """Structured logging for JobAgent."""
 
 import logging
-import sys
-from typing import Optional
 
 import rich.logging
 
 
-def setup_logging(level: str = "INFO", log_file: Optional[str] = None) -> None:
+def setup_logging(level: str = "INFO", log_file: str | None = None) -> None:
     """Configure application-wide logging with rich formatting."""
     handlers: list[logging.Handler] = [
         rich.logging.RichHandler(

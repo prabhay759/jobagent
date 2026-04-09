@@ -10,8 +10,8 @@ import hashlib
 import json
 import random
 import re
+from collections.abc import Callable
 from pathlib import Path
-from typing import AsyncGenerator, Callable, Optional
 from urllib.parse import urlencode
 
 from playwright.async_api import (
@@ -19,6 +19,8 @@ from playwright.async_api import (
     BrowserContext,
     Page,
     async_playwright,
+)
+from playwright.async_api import (
     TimeoutError as PWTimeoutError,
 )
 
@@ -64,7 +66,7 @@ class LinkedInScanner:
 
     async def scan(
         self,
-        on_job_found: Optional[Callable[[dict], None]] = None,
+        on_job_found: Callable[[dict], None] | None = None,
     ) -> list[dict]:
         """
         Run a full scan across all configured keywords × locations.
@@ -209,7 +211,8 @@ class LinkedInScanner:
         pages_to_scrape = min(max_jobs // 25 + 1, 4)
 
         for _ in range(pages_to_scrape):
-            cards = await page.query_selector_all(".job-card-container, .jobs-search-results__list-item")
+            selector = ".job-card-container, .jobs-search-results__list-item"
+            cards = await page.query_selector_all(selector)
             for card in cards:
                 if len(jobs) >= max_jobs:
                     break
@@ -221,7 +224,7 @@ class LinkedInScanner:
 
         return jobs
 
-    async def _extract_card(self, card, page: Page) -> Optional[dict]:
+    async def _extract_card(self, card, page: Page) -> dict | None:
         try:
             title = await self._safe_text(card, ".job-card-list__title, .job-card-container__link")
             company = await self._safe_text(

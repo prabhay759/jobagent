@@ -8,7 +8,6 @@ from __future__ import annotations
 import asyncio
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 from playwright.async_api import async_playwright
 
@@ -129,7 +128,7 @@ class Pipeline:
         # ── 3. Generate CV + Cover Letter ────────────────────
         logger.info("Generating CV + cover letter for %s @ %s…",
                     job.get("title"), job.get("company"))
-        cv_path: Optional[Path] = None
+        cv_path: Path | None = None
         cover_letter = ""
 
         try:
@@ -177,7 +176,7 @@ class Pipeline:
 
     # ── Apply (reusable — called from dashboard too) ───────────
 
-    async def _apply(self, job: dict, cv_path: Optional[Path], cover_letter: str) -> None:
+    async def _apply(self, job: dict, cv_path: Path | None, cover_letter: str) -> None:
         """Submit the application. Called after preview approval."""
         job_id = job["id"]
         applied = False
@@ -212,7 +211,7 @@ class Pipeline:
         self.tracker.add_message(job_id, "assistant", response)
         return response
 
-    async def regenerate_cv(self, job_id: str) -> Optional[Path]:
+    async def regenerate_cv(self, job_id: str) -> Path | None:
         """Re-generate the CV for a job (called from dashboard edit flow)."""
         job = self.tracker.get_job(job_id)
         if not job:

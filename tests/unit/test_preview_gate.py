@@ -1,9 +1,8 @@
 """Tests for preview gate in pipeline (mocked dependencies)."""
 
 import asyncio
-import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
 from pathlib import Path
+from unittest.mock import AsyncMock, MagicMock
 
 
 def make_job(job_id="abc123", easy_apply=True):
@@ -36,12 +35,10 @@ class TestPreviewGate:
 
     def _make_pipeline(self, notifier, tracker=None, tmp_path=None):
         """Build a Pipeline with all dependencies mocked."""
+
         from jobagent.settings import (
-            Settings, AnthropicSettings, ApplicationSettings,
-            WhatsAppSettings, CVSettings, DatabaseSettings,
-            DashboardSettings, LinkedInSettings, SearchSettings,
+            Settings,
         )
-        from pydantic import SecretStr
 
         settings = MagicMock(spec=Settings)
         settings.anthropic.api_key.get_secret_value.return_value = "sk-ant-test"
@@ -59,7 +56,10 @@ class TestPreviewGate:
         from jobagent.pipeline import Pipeline
         pipeline = Pipeline.__new__(Pipeline)
         pipeline.settings = settings
-        pipeline.profile = {"personal": {"name": "Test", "summary": "Test"}, "cover_letter_tone": "confident"}
+        pipeline.profile = {
+            "personal": {"name": "Test", "summary": "Test"},
+            "cover_letter_tone": "confident",
+        }
 
         pipeline.tracker = tracker or MagicMock()
         pipeline.tracker.get_job.return_value = make_job()

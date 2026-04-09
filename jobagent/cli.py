@@ -10,9 +10,9 @@ from pathlib import Path
 
 import click
 import yaml
+from rich import box
 from rich.console import Console
 from rich.table import Table
-from rich import box
 
 from jobagent.logging_config import setup_logging
 
@@ -66,8 +66,8 @@ def setup() -> None:
 @click.pass_context
 def scan(ctx: click.Context) -> None:
     """Scan LinkedIn and run the full application pipeline."""
-    from jobagent.settings import load_settings
     from jobagent.pipeline import Pipeline
+    from jobagent.settings import load_settings
 
     settings = load_settings(ctx.obj["config"])
     with open(ctx.obj["profile"]) as f:
@@ -97,8 +97,8 @@ def dashboard(ctx: click.Context) -> None:
 @click.pass_context
 def apply(ctx: click.Context, url: str) -> None:
     """Process a single job URL through the full pipeline."""
-    from jobagent.settings import load_settings
     from jobagent.pipeline import Pipeline
+    from jobagent.settings import load_settings
 
     settings = load_settings(ctx.obj["config"])
     with open(ctx.obj["profile"]) as f:
@@ -122,8 +122,8 @@ def apply(ctx: click.Context, url: str) -> None:
 @click.pass_context
 def chat(ctx: click.Context, job_id: str) -> None:
     """Interactive chat about a specific job."""
-    from jobagent.settings import load_settings
     from jobagent.pipeline import Pipeline
+    from jobagent.settings import load_settings
 
     settings = load_settings(ctx.obj["config"])
     with open(ctx.obj["profile"]) as f:
@@ -155,8 +155,8 @@ def chat(ctx: click.Context, job_id: str) -> None:
 @click.pass_context
 def stats(ctx: click.Context) -> None:
     """Show pipeline statistics."""
-    from jobagent.settings import load_settings
     from jobagent.db.tracker import JobTracker
+    from jobagent.settings import load_settings
 
     settings = load_settings(ctx.obj["config"])
     tracker = JobTracker(settings.database.path)

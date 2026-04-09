@@ -11,7 +11,6 @@ import threading
 from dataclasses import dataclass, field
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
-from typing import Optional
 from urllib.parse import parse_qs
 
 from jobagent.logging_config import get_logger
@@ -50,7 +49,7 @@ class WhatsAppNotifier:
         """Job found gate: YES / NO / INFO."""
         return await self._send_and_wait(job["id"], message)
 
-    async def request_preview_approval(self, job: dict, cv_path: Optional[Path],
+    async def request_preview_approval(self, job: dict, cv_path: Path | None,
                                         cover_letter: str) -> str:
         """
         Preview gate: show CV + cover letter, ask SEND / EDIT / SKIP.
@@ -132,7 +131,7 @@ class WhatsAppNotifier:
         try:
             await asyncio.wait_for(req.event.wait(),
                                     timeout=self.cfg.approval_timeout_minutes * 60)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             logger.warning("Timeout waiting for reply (job %s)", job_id)
 
         with self._lock:
@@ -161,7 +160,7 @@ class WhatsAppNotifier:
         return await asyncio.get_event_loop().run_in_executor(
             None, self._twilio_sync, body, media_url)
 
-    def _twilio_sync(self, body: str, media_url: Optional[str] = None) -> bool:
+    def _twilio_sync(self, body: str, media_url: str | None = None) -> bool:
         try:
             from twilio.rest import Client
             t = self.cfg.twilio
@@ -180,7 +179,8 @@ class WhatsAppNotifier:
 
     async def _callmebot(self, message: str) -> bool:
         try:
-            import urllib.parse, urllib.request
+            import urllib.parse
+            import urllib.request
             cb = self.cfg.callmebot  # type: ignore
             url = (f"https://api.callmebot.com/whatsapp.php"
                    f"?phone={cb.phone}&text={urllib.parse.quote(message)}&apikey={cb.apikey}")

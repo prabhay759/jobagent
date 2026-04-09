@@ -23,7 +23,7 @@ logger = get_logger(__name__)
 
 
 class CVGenerator:
-    def __init__(self, cfg: CVSettings, ai: "AIClient") -> None:
+    def __init__(self, cfg: CVSettings, ai: AIClient) -> None:
         self.cfg = cfg
         self.ai = ai
         self.cfg.output_dir.mkdir(parents=True, exist_ok=True)
@@ -62,7 +62,8 @@ class CVGenerator:
             else self._builtin_template()
         )
 
-        exp_html = self._render_experience(tailored.get("experience") or profile.get("experience", []))
+        experience = tailored.get("experience") or profile.get("experience", [])
+        exp_html = self._render_experience(experience)
         edu_html = self._render_education(profile.get("education", []))
         skills = " · ".join(
             tailored.get("skills_highlighted")
@@ -122,7 +123,8 @@ class CVGenerator:
         )
 
     async def _to_pdf(self, html: str, job: dict) -> Path:
-        safe = lambda s: "".join(c for c in str(s) if c.isalnum() or c in " ._-")[:30]
+        def safe(s: object) -> str:
+            return "".join(c for c in str(s) if c.isalnum() or c in " ._-")[:30]
         filename = (
             f"CV_{safe(job.get('company', 'Company'))}_"
             f"{safe(job.get('title', 'Role'))}_"

@@ -6,10 +6,12 @@ Fills LinkedIn Easy Apply multi-step forms using AI.
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import random
 from typing import TYPE_CHECKING
 
-from playwright.async_api import Page, TimeoutError as PWTimeoutError
+from playwright.async_api import Page
+from playwright.async_api import TimeoutError as PWTimeoutError
 
 from jobagent.logging_config import get_logger
 
@@ -22,7 +24,7 @@ logger = get_logger(__name__)
 class EasyApplyHandler:
     MAX_STEPS = 12
 
-    def __init__(self, ai: "AIClient", profile: dict) -> None:
+    def __init__(self, ai: AIClient, profile: dict) -> None:
         self.ai = ai
         self.profile = profile
 
@@ -57,7 +59,8 @@ class EasyApplyHandler:
                     await asyncio.sleep(1)
                     continue
 
-                if await self._click_if_exists(page, 'button[aria-label="Review your application"]'):
+                review_selector = 'button[aria-label="Review your application"]'
+                if await self._click_if_exists(page, review_selector):
                     await asyncio.sleep(1)
                     continue
 
@@ -106,10 +109,8 @@ class EasyApplyHandler:
                 job,
                 self.profile,
             )
-            try:
+            with contextlib.suppress(Exception):
                 await sel.select_option(label=best.strip())
-            except Exception:
-                pass
 
     def _quick_fill(self, label: str, cover_letter: str) -> str:
         """Fast rule-based field filling without calling the API."""
@@ -125,7 +126,8 @@ class EasyApplyHandler:
             ("website", "portfolio", "github"): p.get("website", "") or p.get("github", ""),
             ("cover letter", "motivation", "why apply", "why are you"): cover_letter,
             ("salary", "ctc", "compensation", "expected"): str(prefs.get("min_salary_inr", "")),
-            ("notice", "join", "start date", "available from"): prefs.get("notice_period", "60 days"),
+            ("notice", "join", "start date", "available from"):
+                prefs.get("notice_period", "60 days"),
             ("city", "current location"): p.get("location", ""),
         }
         for keys, value in rules.items():

@@ -5,14 +5,14 @@ SQLite-backed job tracker with connection pooling and migrations.
 
 from __future__ import annotations
 
-import json
 import hashlib
+import json
 import sqlite3
 import threading
+from collections.abc import Generator
 from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
-from typing import Generator, Optional
 
 from jobagent.logging_config import get_logger
 
@@ -176,17 +176,17 @@ class JobTracker:
             match_score=analysis.get("score"),
         )
 
-    def get_job(self, job_id: str) -> Optional[dict]:
+    def get_job(self, job_id: str) -> dict | None:
         with self._get_conn() as conn:
             row = conn.execute("SELECT * FROM jobs WHERE id = ?", (job_id,)).fetchone()
             return self._parse_row(row)
 
-    def get_job_by_url(self, url: str) -> Optional[dict]:
+    def get_job_by_url(self, url: str) -> dict | None:
         with self._get_conn() as conn:
             row = conn.execute("SELECT * FROM jobs WHERE url = ?", (url,)).fetchone()
             return self._parse_row(row)
 
-    def list_jobs(self, status: Optional[str] = None, limit: int = 200) -> list[dict]:
+    def list_jobs(self, status: str | None = None, limit: int = 200) -> list[dict]:
         with self._get_conn() as conn:
             if status:
                 rows = conn.execute(
@@ -273,7 +273,7 @@ class JobTracker:
         return hashlib.sha1(key.encode()).hexdigest()[:12]
 
     @staticmethod
-    def _parse_row(row: Optional[sqlite3.Row]) -> Optional[dict]:
+    def _parse_row(row: sqlite3.Row | None) -> dict | None:
         if row is None:
             return None
         d = dict(row)
@@ -301,7 +301,7 @@ class JobTracker:
     def save_cover_letter(self, job_id: str, text: str) -> None:
         self.update_job(job_id, cover_letter=text)
 
-    def get_cv_path(self, job_id: str) -> Optional[str]:
+    def get_cv_path(self, job_id: str) -> str | None:
         with self._get_conn() as conn:
             row = conn.execute(
                 "SELECT cv_path FROM jobs WHERE id = ?", (job_id,)

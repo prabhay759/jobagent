@@ -1,8 +1,7 @@
 """Tests for JobTracker."""
 
+
 import pytest
-import tempfile
-from pathlib import Path
 
 from jobagent.db.tracker import JobTracker
 

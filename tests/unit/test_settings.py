@@ -1,8 +1,9 @@
 """Tests for settings loading and validation."""
 
+from pathlib import Path
+
 import pytest
 import yaml
-from pathlib import Path
 
 
 def write_config(tmp_path: Path, data: dict) -> Path:
@@ -43,8 +44,9 @@ class TestSettings:
         assert settings.anthropic.api_key.get_secret_value() == "sk-ant-from-env"
 
     def test_score_threshold_validation(self, tmp_path):
-        from jobagent.settings import SearchSettings
         from pydantic import ValidationError
+
+        from jobagent.settings import SearchSettings
 
         with pytest.raises(ValidationError):
             SearchSettings(min_match_score=150)
